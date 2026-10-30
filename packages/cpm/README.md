@@ -61,7 +61,35 @@ cargo install --path .
 
 ---
 
-### 2. CrestCode Extension Management
+### 2. Configuration Settings (`cpm config`)
+
+CPM stores persistent settings in `~/.config/cpm/config.toml`.
+
+| Command | Description |
+| :--- | :--- |
+| `cpm config list` | Displays all configuration keys and current values |
+| `cpm config get [key]` | Retrieves value of a specific setting |
+| `cpm config set <key> <value>` | Updates a setting (`true`/`false`, `yes`/`no`, `1`/`0`) |
+| `cpm config path` | Prints full path to the configuration file |
+| `cpm config reset` | Resets all settings to default values |
+
+#### Available Options:
+- `show_banner`: Enable/disable ASCII banner on execution (default: `true`).
+  ```bash
+  cpm config set show_banner false
+  ```
+- `auto_yes`: Automatically confirm all interactive prompts (default: `false`).
+- `color`: Enable/disable colorized terminal styling (default: `true`).
+- `show_hints`: Enable/disable helpful hints (default: `true`).
+
+You can also bypass the banner on single commands via `--no-banner`:
+```bash
+cpm --no-banner install curl
+```
+
+---
+
+### 3. CrestCode Extension Management
 
 CPM manages extensions installed inside `~/.crestcode/extensions/`.
 
@@ -89,6 +117,7 @@ packages/cpm/
 └── src/
     ├── main.rs         # CLI entry point (Clap CLI parser)
     ├── backend.rs      # Apk execution wrapper logic
+    ├── config.rs       # Configuration loader & manager
     ├── ui.rs           # Formatting, colored indicators & tables
     └── commands/
         ├── mod.rs
