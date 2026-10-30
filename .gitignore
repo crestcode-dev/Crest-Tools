@@ -1,0 +1,24 @@
+# Rust build artifacts
+target/
+**/target/
+**/*.rs.bk
+Cargo.lock.backup
+
+# Package / distribution archives
+*.apk
+*.tar.gz
+*.zip
+
+# OS / Editor artifacts
+.DS_Store
+*.swp
+*~
+.idea/
+.vscode/
+*.log
+
+# Sensitive credentials
+*.jks
+*.keystore
+*.asc
+.env*
