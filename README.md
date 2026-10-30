@@ -13,11 +13,11 @@ Crest Tools brings together package-level utilities, shared libraries, and devel
 
 ## Packages
 
-| Package | Description |
-| --- | --- |
-| `CPM` | Crest Package Manager |
-| `Crest-Git` | Git utilities |
-| `Crest-Utils` | Common utilities |
+| Package | Description | Status |
+| --- | --- | --- |
+| [`CPM`](packages/cpm) | Crest Package Manager & Extension Manager (Rust) | ✅ Active |
+| `Crest-Git` | Git utilities | ⏳ Planned |
+| `Crest-Utils` | Common utilities | ⏳ Planned |
 
 ## Repository Structure
 

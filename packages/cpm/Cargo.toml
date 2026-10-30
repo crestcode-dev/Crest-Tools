@@ -2,6 +2,8 @@
 name = "cpm"
 version = "0.1.0"
 edition = "2024"
+license = "Apache-2.0"
+description = "CrestCode Package Manager - Modern APK frontend & Extension Manager"
 
 [dependencies]
 anyhow = "1.0.104"
