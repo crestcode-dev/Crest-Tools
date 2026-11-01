@@ -22,7 +22,7 @@ fn get_extensions_dir() -> PathBuf {
 }
 
 pub fn list() -> Result<()> {
-    print_info("CREST-EXT", "Listing installed CrestCode extensions...");
+    print_info("CREST-EXT", "Listing installed CrestEditor extensions...");
     let ext_dir = get_extensions_dir();
 
     if !ext_dir.exists() {
@@ -55,12 +55,12 @@ pub fn list() -> Result<()> {
     }
 
     if count == 0 {
-        println!("{}", "No valid CrestCode extensions found in ~/.crestcode/extensions/".dimmed());
+        println!("{}", "No valid CrestEditor extensions found in ~/.crestcode/extensions/".dimmed());
     } else {
         println!("{table}");
         println!(
             "{} {}",
-            "Total CrestCode extensions:".dimmed(),
+            "Total CrestEditor extensions:".dimmed(),
             count.to_string().bright_magenta().bold()
         );
     }
@@ -82,8 +82,8 @@ pub fn new_extension(id: &str, name: Option<String>) -> Result<()> {
         id: id.to_string(),
         name: ext_name,
         version: "0.1.0".to_string(),
-        author: Some("CrestCode Developer".to_string()),
-        description: Some(format!("CrestCode extension for {}", id)),
+        author: Some("CrestEditor Developer".to_string()),
+        description: Some(format!("CrestEditor extension for {}", id)),
     };
 
     let manifest_json = serde_json::to_string_pretty(&manifest)?;
@@ -92,11 +92,11 @@ pub fn new_extension(id: &str, name: Option<String>) -> Result<()> {
     // Create an entry point file
     fs::write(
         ext_dir.join("index.js"),
-        "// CrestCode Extension Entry Point\nexport function activate(context) {\n    console.log('Extension activated!');\n}\n",
+        "// CrestEditor Extension Entry Point\nexport function activate(context) {\n    console.log('Extension activated!');\n}\n",
     )?;
 
     print_success(&format!(
-        "Created new CrestCode extension '{}' at {}",
+        "Created new CrestEditor extension '{}' at {}",
         id.bright_magenta(),
         ext_dir.display().to_string().cyan()
     ));

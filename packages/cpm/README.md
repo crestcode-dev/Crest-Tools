@@ -1,10 +1,10 @@
-# CPM (CrestCode Package Manager)
+# CPM (CrestEditor Package Manager)
 
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Language: Rust](https://img.shields.io/badge/language-Rust_2024-orange.svg)](https://www.rust-lang.org/)
-[![Ecosystem: CrestCode](https://img.shields.io/badge/ecosystem-CrestCode-purple.svg)](https://github.com/heySaish/Crest-Tools)
+[![Ecosystem: CrestEditor](https://img.shields.io/badge/ecosystem-CrestEditor-purple.svg)](https://github.com/heySaish/Crest-Tools)
 
-**CPM** is a high-performance CLI tool built with Rust for Alpine Linux & CrestCode environments. It provides an intuitive APT-style frontend wrapper over Alpine's native `apk` package manager alongside a dedicated extension manager for the CrestCode Android editor.
+**CPM** is a high-performance CLI tool built with Rust for Alpine Linux & CrestEditor environments. It provides an intuitive APT-style frontend wrapper over Alpine's native `apk` package manager alongside a dedicated extension manager for the CrestEditor Android editor.
 
 ---
 
@@ -13,7 +13,7 @@
 - **Modern CLI UX**: Rich terminal output with colorful status badges, spinners (`indicatif`), and clean structured tables (`comfy-table`).
 - **APT-style Syntax**: Friendly, familiar commands (`cpm install`, `cpm remove`, `cpm update`, `cpm upgrade`) wrapping Alpine's `apk`.
 - **Simulation Mode**: Run dry-runs (`--simulate` / `-s`) before modifying system packages.
-- **CrestCode Extension Manager**: Create, list, inspect, and remove extensions for CrestCode (`~/.crestcode/extensions/`).
+- **CrestEditor Extension Manager**: Create, list, inspect, and remove extensions for CrestEditor (`~/.crestcode/extensions/`).
 
 ---
 
@@ -89,13 +89,13 @@ cpm --no-banner install curl
 
 ---
 
-### 3. CrestCode Extension Management
+### 3. CrestEditor Extension Management
 
 CPM manages extensions installed inside `~/.crestcode/extensions/`.
 
 | Command | Description |
 | :--- | :--- |
-| `cpm ext list` | Lists all installed CrestCode extensions |
+| `cpm ext list` | Lists all installed CrestEditor extensions |
 | `cpm ext new <id> [name]` | Scaffolds a new extension directory with `manifest.json` & `index.js` |
 | `cpm ext remove <id>` | Removes an installed extension by ID |
 
@@ -127,7 +127,7 @@ packages/cpm/
         ├── upgrade.rs
         ├── search.rs
         ├── list.rs
-        └── extension.rs # CrestCode extension lifecycle
+        └── extension.rs # CrestEditor extension lifecycle
 ```
 
 ---

@@ -13,7 +13,7 @@ pub fn print_banner() {
     println!(
         "{}   {}    {}",
         "│".cyan().bold(),
-        "CPM - CrestCode Package Manager".bright_green().bold(),
+        "CPM - CrestEditor Package Manager".bright_green().bold(),
         "│".cyan().bold()
     );
     println!(

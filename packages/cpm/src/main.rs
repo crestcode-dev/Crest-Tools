@@ -12,10 +12,10 @@ use config::Config;
 #[derive(Parser)]
 #[command(
     name = "cpm",
-    author = "CrestCode Team",
+    author = "CrestEditor Team",
     version = "0.1.1",
-    about = "CrestCode Package Manager - Modern APK frontend & Extension Manager",
-    long_about = "A high-performance package manager for Alpine Linux & CrestCode with APT-style syntax, beautiful tables, and extension management."
+    about = "CrestEditor Package Manager - Modern APK frontend & Extension Manager",
+    long_about = "A high-performance package manager for Alpine Linux & CrestEditor with APT-style syntax, beautiful tables, and extension management."
 )]
 struct Cli {
     /// Suppress banner output
@@ -49,7 +49,7 @@ enum Commands {
     /// List installed packages
     List,
 
-    /// Manage CrestCode extensions
+    /// Manage CrestEditor extensions
     #[command(subcommand)]
     Ext(ExtCommands),
 
@@ -86,10 +86,10 @@ pub struct UpgradeArgs {
 
 #[derive(Subcommand)]
 pub enum ExtCommands {
-    /// List installed CrestCode extensions
+    /// List installed CrestEditor extensions
     List,
 
-    /// Scaffold a new CrestCode extension template
+    /// Scaffold a new CrestEditor extension template
     New {
         /// Extension unique identifier (e.g. my-theme, python-tools)
         id: String,
@@ -99,7 +99,7 @@ pub enum ExtCommands {
         name: Option<String>,
     },
 
-    /// Remove an installed CrestCode extension
+    /// Remove an installed CrestEditor extension
     Remove {
         /// Extension identifier to remove
         id: String,
