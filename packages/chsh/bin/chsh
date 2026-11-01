@@ -2,9 +2,21 @@
 # chsh - Change login shell for CrestEditor / Alpine Linux environment
 set -e
 
-VERSION="1.0.0"
-CONFIG_DIR="${HOME:-/public}/.config/crest"
-CONFIG_FILE="${CONFIG_DIR}/shell"
+VERSION="1.0.1"
+
+# Locate settings.json (Single Source of Truth)
+SETTINGS_FILE=""
+if [ -n "$PREFIX" ] && [ -f "$PREFIX/settings.json" ]; then
+    SETTINGS_FILE="$PREFIX/settings.json"
+elif [ -f "/data/data/com.cresteditor/files/settings.json" ]; then
+    SETTINGS_FILE="/data/data/com.cresteditor/files/settings.json"
+elif [ -f "$HOME/../settings.json" ]; then
+    SETTINGS_FILE="$HOME/../settings.json"
+elif [ -n "$PREFIX" ]; then
+    SETTINGS_FILE="$PREFIX/settings.json"
+else
+    SETTINGS_FILE="/data/data/com.cresteditor/files/settings.json"
+fi
 
 usage() {
     cat <<EOF
@@ -127,8 +139,12 @@ done
 # Interactive mode if no shell argument provided
 if [ -z "$NEW_SHELL" ]; then
     CURRENT=""
-    if [ -f "$CONFIG_FILE" ]; then
-        CURRENT="$(head -n 1 "$CONFIG_FILE" 2>/dev/null | tr -d '[:space:]')"
+    if [ -n "$SETTINGS_FILE" ] && [ -f "$SETTINGS_FILE" ]; then
+        if command -v jq >/dev/null 2>&1; then
+            CURRENT="$(jq -r '.["terminal.integrated.shell"] // empty' "$SETTINGS_FILE" 2>/dev/null || true)"
+        else
+            CURRENT="$(grep '"terminal.integrated.shell"' "$SETTINGS_FILE" 2>/dev/null | head -n 1 | sed -E 's/.*:[[:space:]]*"([^"]*)".*/\1/' || true)"
+        fi
     fi
     if [ -z "$CURRENT" ]; then
         CURRENT="${SHELL:-/bin/bash}"
@@ -153,9 +169,48 @@ if [ -z "$RESOLVED" ]; then
     exit 1
 fi
 
-# Ensure config directory exists
-mkdir -p "$CONFIG_DIR"
-echo "$RESOLVED" > "$CONFIG_FILE"
+# Update settings.json atomically (Single Source of Truth)
+if [ -n "$SETTINGS_FILE" ]; then
+    SETTINGS_DIR="$(dirname "$SETTINGS_FILE")"
+    if [ ! -d "$SETTINGS_DIR" ]; then
+        mkdir -p "$SETTINGS_DIR" 2>/dev/null || true
+    fi
+
+    TMP_FILE="${SETTINGS_FILE}.tmp.$$"
+
+    if [ -f "$SETTINGS_FILE" ]; then
+        if command -v jq >/dev/null 2>&1; then
+            if jq --arg s "$RESOLVED" '.["terminal.integrated.shell"] = $s' "$SETTINGS_FILE" > "$TMP_FILE" 2>/dev/null; then
+                mv -f "$TMP_FILE" "$SETTINGS_FILE"
+            else
+                rm -f "$TMP_FILE" 2>/dev/null || true
+                echo "chsh: error updating $SETTINGS_FILE (invalid JSON)" >&2
+                exit 1
+            fi
+        else
+            # Fallback without jq: safe POSIX substitution into temporary file
+            if grep -q '"terminal.integrated.shell"' "$SETTINGS_FILE" 2>/dev/null; then
+                sed -E "s|(\"terminal\.integrated\.shell\"[[:space:]]*:[[:space:]]*)\"[^\"]*\"|\1\"$RESOLVED\"|" "$SETTINGS_FILE" > "$TMP_FILE"
+                mv -f "$TMP_FILE" "$SETTINGS_FILE"
+            else
+                # If key wasn't in JSON yet, insert before final brace
+                sed -E "s|\}[[:space:]]*$|,\n  \"terminal.integrated.shell\": \"$RESOLVED\"\n\}|" "$SETTINGS_FILE" > "$TMP_FILE"
+                mv -f "$TMP_FILE" "$SETTINGS_FILE"
+            fi
+        fi
+    else
+        # If settings.json doesn't exist yet, create initial valid structure
+        cat <<EOF > "$TMP_FILE"
+{
+  "terminal.integrated.shell": "$RESOLVED"
+}
+EOF
+        mv -f "$TMP_FILE" "$SETTINGS_FILE"
+    fi
+fi
+
+# Clean up legacy ~/.config/crest/shell if present
+rm -f "$HOME/.config/crest/shell" 2>/dev/null || true
 
 # Also update /etc/shells if writable and not present
 if [ -w /etc/shells ]; then
